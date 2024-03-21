@@ -1,4 +1,3 @@
-
 import './App.css';
 import items from './data';
 import { useState } from 'react';

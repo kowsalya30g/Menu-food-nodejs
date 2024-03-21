@@ -1,10 +1,8 @@
-
 import './App.css';
 import items from './data';
 import { useState } from 'react';
 import Categories from './Categories';
 import Menu from './Menu';
-// testing branch
 const allCategories = ['All', ...new Set(items.map((item) => item.category))];
 
 function App() {

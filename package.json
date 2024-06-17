@@ -38,6 +38,6 @@
   {
     "scripts": {
       "cypress:run": "cypress run"
-    }
+  }
   }
 }

@@ -21,11 +21,11 @@ jobs:
       - name: Scan changed files
         run: |
           echo "Files changed: ${{ steps.changed-files.outputs.files }}"
-          # Add your code scanning command here
-          # Example: run a linter or a security scanner
+          npm install -g eslint
           for file in ${{ steps.changed-files.outputs.files }}; do
-            # replace `your-scan-command` with the actual scan command
-            your-scan-command "$file"
+            if [[ "$file" == *.js || "$file" == *.ts ]]; then
+              eslint "$file"
+            fi
           done
 
   cypress-tests:

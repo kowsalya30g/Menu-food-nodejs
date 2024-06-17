@@ -7,4 +7,3 @@ FROM openjdk:8u171-jre-alpine
 WORKDIR /nodeProject
 COPY --from=node target/*.jar ./nodeProject/Menu-food-nodejs.jar
 CMD ["java", "-jar", "./nodeProject/Menu-food-nodejs.jar"]
-#merge conflict

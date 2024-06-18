@@ -1,68 +1,25 @@
-name: CI Pipeline
+name: SpiderLint AI Reviewer
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  code-scan:
+  review:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Get list of changed files
-        id: changed-files
-        run: |
-          git fetch origin
-          echo "::set-output name=files::$(git diff --name-only origin/master...${{ github.sha }})"
-
-      - name: Scan changed files
-        run: |
-          echo "Files changed: ${{ steps.changed-files.outputs.files }}"
-          # Add your code scanning command here
-          # Example: run a linter or a security scanner
-          for file in ${{ steps.changed-files.outputs.files }}; do
-            # replace `your-scan-command` with the actual scan command
-            your-scan-command "$file"
-          done
-
-  cypress-tests:
-    runs-on: ubuntu-latest
-    needs: code-scan
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run Cypress tests
-        run: npm run cypress:run
-
-  comment-results:
-    runs-on: ubuntu-latest
-    needs: cypress-tests
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Extract and comment results
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          response="Cypress tests completed. See the results below:"
-          # Assume the response is collected in a variable or a file
-          response+=$(cat cypress/results.txt) # Modify this according to your setup
-          
-          # Comment on the PR
-          curl -s -H "Authorization: token $GITHUB_TOKEN" \
-               -X POST \
-               -d "{\"body\": \"$response\"}" \
-               "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+    - name: Call SpiderLint AI Reviewer
+      env:
+        REPO_NAME: ${{ github.repository }}
+        PR_NUMBER: ${{ github.event.number }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BACKEND_URL: ${{ secrets.BACKEND_URL }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        curl -X POST "$BACKEND_URL/review" \
+          -H "Content-Type: application/json" \
+          -d "{\"repo\": \"$REPO_NAME\", \"pr\": $PR_NUMBER, \"github_token\": \"$GITHUB_TOKEN\", \"openai_api_key\": \"$OPENAI_API_KEY\"}"

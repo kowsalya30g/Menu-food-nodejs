@@ -1,9 +1,9 @@
 const menu = [
     {
         id: 1,
-        title: 'Bread & Cheesee',
+        title: 'Bread & Cheese',
         category: 'Breakfast',
-        price: 16.77,
+        price: 17.77,
         img: 'https://images.pexels.com/photos/103124/pexels-photo-103124.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
         desc: 'Biodiesel austin prism yr tousled thundercats occupy chillwave sustainable kinfolk DIY.',
     },

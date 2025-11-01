@@ -1,4 +1,4 @@
-FROM node:19.3-alpine3.16 as nodejs
+FROM node:20.19.5
 COPY ./package.json ./package.json
 COPY ./src ./src
 RUN npm dependency:go-offline -B
